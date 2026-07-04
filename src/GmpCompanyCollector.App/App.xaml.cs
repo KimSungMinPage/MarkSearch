@@ -1,0 +1,1 @@
+using System.Windows;namespace GmpCompanyCollector.App;public partial class App:Application{protected override void OnStartup(StartupEventArgs e){DispatcherUnhandledException+=(s,a)=>{MessageBox.Show("예상하지 못한 오류가 발생했습니다. 로그를 확인하십시오.","오류");a.Handled=true;};base.OnStartup(e);}}
