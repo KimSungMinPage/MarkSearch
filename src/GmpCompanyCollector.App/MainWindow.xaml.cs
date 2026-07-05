@@ -1,0 +1,1 @@
+using System.Windows;using GmpCompanyCollector.App.ViewModels;namespace GmpCompanyCollector.App;public partial class MainWindow:Window{public MainWindow(){InitializeComponent();DataContext=new MainViewModel();}}
