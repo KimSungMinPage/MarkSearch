@@ -11,11 +11,11 @@ class CollectionTab(ttk.Frame):
         ttk.Label(self,text="페이지당 건수").grid(row=5,column=0); ttk.Combobox(self,textvariable=self.rows,values=PAGE_SIZE_OPTIONS,state="readonly").grid(row=5,column=1,sticky="w")
         self.start_btn=ttk.Button(self,text="수집 시작",command=self.start); self.start_btn.grid(row=6,column=1,sticky="w"); self.cancel_btn=ttk.Button(self,text="수집 취소",command=self.cancel,state="disabled"); self.cancel_btn.grid(row=6,column=1); ttk.Button(self,text="결과 초기화",command=self.clear).grid(row=6,column=1,sticky="e")
         ttk.Label(self,textvariable=self.progress).grid(row=7,column=0,columnspan=2,sticky="w",pady=8); self.bar=ttk.Progressbar(self,maximum=100); self.bar.grid(row=8,column=0,columnspan=2,sticky="ew"); self.columnconfigure(1,weight=1)
-    def _options(self):
+    def build_options(self):
         return CollectionOptions(self.app.api_tab.key_var.get(), KeyMode(self.app.api_tab.mode_var.get()), CollectionKind(self.kind.get()), self.induty.get(), self.entrps.get(), self.dt.get(), self.no.get(), int(self.rows.get()))
     def start(self): self.set_running(True); self.app.cancel_event.clear(); threading.Thread(target=self._worker,daemon=True).start()
     def _worker(self):
-        opts=self._options()
+        opts=self.build_options()
         try:
             if opts.kind != CollectionKind.FACTORIES: self.app.companies=collect_pages(lambda p:self.app.api.get_company_page(opts,p),opts.num_of_rows,self.app.cancel_event,lambda x:self.app.queue.put(("progress",x)))
             if opts.kind != CollectionKind.COMPANIES: self.app.factories=collect_pages(lambda p:self.app.api.get_factory_page(opts,p),opts.num_of_rows,self.app.cancel_event,lambda x:self.app.queue.put(("progress",x)))
